@@ -29,31 +29,33 @@ pub struct CriptoUsdHistory {
 
 #[derive(Deserialize, Debug)]
 pub struct ChileanIndicators {
-    fecha: DateTime<Utc>,
-    uf: ChileanIndicator,
-    ivp: ChileanIndicator,
-    dolar: ChileanIndicator,
-    dolar_intercambio: ChileanIndicator,
-    euro: ChileanIndicator,
-    ipc: ChileanIndicator,
-    utm: ChileanIndicator,
-    imacec: ChileanIndicator,
-    tpm: ChileanIndicator,
-    libra_cobre: ChileanIndicator,
-    tasa_desempleo: ChileanIndicator,
-    bitcoin: ChileanIndicator,
+    pub fecha: DateTime<Utc>,
+    pub uf: ChileanIndicator,
+    pub ivp: ChileanIndicator,
+    pub dolar: ChileanIndicator,
+    pub dolar_intercambio: ChileanIndicator,
+    pub euro: ChileanIndicator,
+    pub ipc: ChileanIndicator,
+    pub utm: ChileanIndicator,
+    pub imacec: ChileanIndicator,
+    pub tpm: ChileanIndicator,
+    pub libra_cobre: ChileanIndicator,
+    pub tasa_desempleo: ChileanIndicator,
+    pub bitcoin: ChileanIndicator,
 }
 
-#[derive(Debug, Deserialize)]
+
+#[derive(Deserialize, Debug)]
 pub struct ChileanIndicator {
-    codigo: String,
-    nombre: String,
-    unidad_medida: String,
-    fecha: DateTime<Utc>,
-    valor: f64,
+    pub codigo: String,
+    pub nombre: String,
+    pub unidad_medida: String,
+    pub fecha: DateTime<Utc>,
+    pub valor: f64,
 }
 
-#[derive(Debug, Deserialize)]
+
+#[derive(Deserialize, Debug)]
 pub struct CriptoIndicator {
     id: String,
     symbol: String,

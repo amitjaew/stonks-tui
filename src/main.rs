@@ -1,6 +1,6 @@
 mod utils;
-use utils::api;
-use utils::scheme::CriptoUsdHistory;
+//use utils::api;
+//use utils::scheme::CriptoUsdHistory;
 use utils::ui;
 
 #[tokio::main]
@@ -14,5 +14,5 @@ async fn main() {
     //println!("{:?}", clp_compare.get_points());
     
     println!("Sire, please wait until stonks are loaded");
-    ui::gui_startup().await;
+    let _ = ui::gui_startup().await;
 }

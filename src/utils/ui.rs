@@ -1,12 +1,14 @@
 use ratatui::{
     prelude::*,
-    widgets::*
+    widgets::*,
+    style::{Style, Color, Modifier},
 };
 //use chrono::{ DateTime, Utc };
 use crate::utils::api::{
     get_btc_usd_comp,
     get_clp_usd_comp,
-    get_xmr_usd_comp
+    get_xmr_usd_comp,
+    get_chilean_indicators
 };
 
 
@@ -86,6 +88,8 @@ fn get_chart(
 
 
 pub async fn gui_startup() -> Result<(), Box<dyn std::error::Error>> {
+    let chilean_indicators = get_chilean_indicators().await.unwrap();
+
     let data_xmr = get_xmr_usd_comp().await.unwrap();
     let points_xmr = data_xmr.get_points();
     let dates_xmr = data_xmr.get_date_labels();
@@ -150,21 +154,41 @@ pub async fn gui_startup() -> Result<(), Box<dyn std::error::Error>> {
     // Initialize the terminal backend using crossterm
     let mut terminal = Terminal::new(CrosstermBackend::new(std::io::stderr()))?;
 
-    // Define our counter variable
-    // This is the state of our application
-    let mut counter = 0;
-
     // Main application loop
     loop {
         // Render the UI
         terminal.draw(|f| {
-            f.render_widget(Paragraph::new(format!("Counter: {counter}")), f.size());
-
             let base = f.size();
             let padding_x = 1;
             let margin_x = 1;
             let padding_y = 1;
             let margin_y = 1;
+
+            f.render_widget(
+                Paragraph::new(format!("Press q to quit")),
+                Rect{
+                    x: margin_x,
+                    y: margin_y,
+                    height: base.height / 2 - padding_y - margin_y,
+                    width: base.width / 2 - padding_x - margin_x
+                }
+            );
+            f.render_widget(
+                Paragraph::new(format!(
+                    "\nIMASEC: {}\n\nUF: {} [CLP]\n\nIPC: {}",
+                    chilean_indicators.imacec.valor,
+                    chilean_indicators.uf.valor,
+                    chilean_indicators.ipc.valor
+                ))
+                .style(Style::default().fg(Color::Cyan).add_modifier(Modifier::BOLD)),
+                Rect{
+                    x: margin_x + 4,
+                    y: margin_y + 2,
+                    height: base.height / 2 - padding_y - margin_y,
+                    width: base.width / 2 - padding_x - margin_x
+                }
+            );
+
             f.render_widget(&chart_xmr, Rect{
                 x: base.width / 2 + padding_x + margin_x,
                 y: margin_y,
@@ -191,8 +215,6 @@ pub async fn gui_startup() -> Result<(), Box<dyn std::error::Error>> {
             if let crossterm::event::Event::Key(key) = crossterm::event::read()? {
                 if key.kind == crossterm::event::KeyEventKind::Press {
                     match key.code {
-                        crossterm::event::KeyCode::Char('j') => counter += 1,
-                        crossterm::event::KeyCode::Char('k') => counter -= 1,
                         crossterm::event::KeyCode::Char('q') => break,
                         _ => {},
                     }
